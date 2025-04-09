@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { LHMPlayer, LHMTeam } from "../api/interfaces";
+import { PickData, pickDataApi } from "../api/pickData";
 
 interface Props {
   teamData?: any;
@@ -13,6 +14,17 @@ const SidePick = (props: Props) => {
   const bans = props.teamBans;
   const teams = props.teams;
   const players = props.players;
+  const [pickData, setPickData] = useState<PickData[]>([]);
+
+  useEffect(() => {
+    const fetchPickData = async () => {
+      const data = await pickDataApi.get();
+      setPickData(data);
+    };
+    fetchPickData();
+    const interval = setInterval(fetchPickData, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="sidePick">

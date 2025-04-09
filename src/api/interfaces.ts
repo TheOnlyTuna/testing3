@@ -121,7 +121,7 @@ export interface LOLPickPlayer {
   assignedPosition: string;
   cellId: number;
   championId: number;
-  championPickIntent: number;
+  championPickIntent: number; 
   entitledFeatureType: string;
   nameVisibilityType: string;
   obfuscatedPuuid: string;
