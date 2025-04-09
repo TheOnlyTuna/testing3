@@ -189,6 +189,8 @@ const Layout = (props: Props) => {
         rightTeam={teams.find((x) => x._id === match?.right?.id)}
         match={match || undefined}
         time={time}
+        nextBaronTime={gameData?.nextBaronTime}
+        nextDragonTime={gameData?.nextDragonTime}
         statistics={statistics || undefined}
         observedPlayerLeft={observedPlayerLeft || undefined}
         observedPlayerRight={observedPlayerRight || undefined}

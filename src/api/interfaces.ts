@@ -52,6 +52,8 @@ export interface LOLStatistics {
     gold: number;
     dragons: any[];
     dragonCount: number;
+    nextBaronTime: number;
+    nextDragonTime: number;
     turretsDestroyed: number;
     inhibitorsDestroyed: number;
     barons: number;
@@ -110,6 +112,9 @@ export interface GameData {
   mapName: string;
   mapNumber: number;
   mapTerrain: string;
+  nextBaronTime: number;
+  nextDragonTime: number;
+  nextDragon: string;
 }
 
 export interface LOLPickPlayer {

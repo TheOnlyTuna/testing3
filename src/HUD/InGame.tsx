@@ -19,7 +19,7 @@ import ChemtechDragon from "./assets/dragons/Chemtech.svg";
 
 
 
-import { LHMMatch, LHMPlayer, LHMTeam, LOLStatistics } from "../api/interfaces";
+import { GameData, LHMMatch, LHMPlayer, LHMTeam, LOLStatistics } from "../api/interfaces";
 import { avatars } from "../api/avatars";
 import CameraView from "./Camera/Camera";
 import CameraContainer from "./Camera/Container";
@@ -41,8 +41,7 @@ const DRAGON_PATHS: Record<string, string> = {
   Ocean: OceanDragon,
   Hextech: HextechDragon,
   Chemtech: ChemtechDragon,
-  // ...
-  Default: Dragon, // fallback - ví dụ bạn dùng chính file Dragon.svg
+  Default: Dragon, 
 };
 
 
@@ -66,6 +65,10 @@ interface InGameProps {
   rightTeam?: LHMTeam;
   match?: LHMMatch;
   time?: number;
+  nextBaronTime?: number;  
+  nextDragonTime?: number; 
+  nextDragon?: string; 
+  BaronTime?: number;
   statistics?: LOLStatistics;
   observedPlayerLeft?: LHMPlayer;
   observedPlayerRight?: LHMPlayer;
@@ -81,6 +84,9 @@ const InGame = (props: InGameProps) => {
     match,
     time,
     statistics,
+    nextBaronTime,
+    nextDragonTime,
+    nextDragon,
     observedPlayerLeft,
     observedPlayerRight,
     bottomImages,
@@ -91,11 +97,44 @@ const InGame = (props: InGameProps) => {
   const minutes = time ? Math.floor(time / 60) : 0;
   const seconds = time ? Math.floor(time % 60) : 0;
 
+  const secondsToTime = (s: number): string => {
+    const m = Math.floor(s / 60);
+    const sec = Math.floor(s % 60);
+    return `${m}:${sec.toString().padStart(2, '0')}`;
+  };
+
+  const getCountdown = (target: number | undefined | null, current: number | undefined): string => {
+    if (!target || !current) return "NONE";
+    const diff = target - current;
+    if (diff <= 0) return "ALIVE";
+    return `${secondsToTime(diff)}`;
+  };
+
+  const baronCountdown = getCountdown(nextBaronTime, time);
+  const dragonCountdown = getCountdown(nextDragonTime, time);
+  
+
   return (
     <div className="ingame">
-      
+
+            <div className="baron-time">
+              <div
+                  className="time-icon"
+                  style={{ backgroundImage: `url(${Baron})` }}
+                  />
+                    <span className="time-text">{baronCountdown}</span>
+        </div>
+            <div className="dragon-time">
+              <div
+                  className="time-icon"
+                  style={{ backgroundImage: `url(${Dragon})` }}
+                  />
+                    <span className="time-text">{dragonCountdown}</span>
+        </div>
       {/* vpstudio layout */}
       <div className="default-hub">
+        
+
         <div className={`top-bar-container ${hideTopBar && "hidden"}`}>
           <div className="top-bar" style={{ backgroundImage: `url(${TopBar})` }}>
             
@@ -184,7 +223,7 @@ const InGame = (props: InGameProps) => {
               )}
                 <div className="team-info">
                   <div className="name right">{rightTeam?.shortName || "TWO"}</div>
-                  <div className="bo-box">
+                  <div className="bo-box right">
                     {[...Array(match?.right?.wins || 0)].map((_, i) => (
                       <div className="box win right" key={i} />
                     ))}
