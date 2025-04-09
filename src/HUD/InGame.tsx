@@ -104,7 +104,7 @@ const InGame = (props: InGameProps) => {
   };
 
   const getCountdown = (target: number | undefined | null, current: number | undefined): string => {
-    if (!target || !current) return "NONE";
+    if (!target || !current) return "ALIVE";
     const diff = target - current;
     if (diff <= 0) return "ALIVE";
     return `${secondsToTime(diff)}`;
@@ -122,13 +122,15 @@ const InGame = (props: InGameProps) => {
                   className="time-icon"
                   style={{ backgroundImage: `url(${Baron})` }}
                   />
+                  
                     <span className="time-text">{baronCountdown}</span>
         </div>
             <div className="dragon-time">
               <div
                   className="time-icon"
-                  style={{ backgroundImage: `url(${Dragon})` }}
+                  style={{ backgroundImage: `url(${nextDragon ? DRAGON_PATHS[nextDragon] || DRAGON_PATHS.Default : DRAGON_PATHS.Default})` }}
                   />
+                  
                     <span className="time-text">{dragonCountdown}</span>
         </div>
       {/* vpstudio layout */}
@@ -332,17 +334,16 @@ const InGame = (props: InGameProps) => {
                       {statistics?.red.dragons?.length
                       ? statistics.red.dragons.map((dragon, i) => {
                         // Lấy icon dựa trên dragon.type
-                        const icon = DRAGON_PATHS[dragon.type] ?? DRAGON_PATHS.Default;
+                        const iconDragon = DRAGON_PATHS[dragon.type] ?? DRAGON_PATHS.Default;
                         return (
                           <>
                           <div 
                           key={i}
                           className="footer-icon"
                           style={{
-                            backgroundImage: `url(${icon})`,
+                            backgroundImage: `url(${iconDragon})`,
                           }} 
                           />
-                          
                           </>
                         );
                       })

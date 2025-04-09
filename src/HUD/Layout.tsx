@@ -191,6 +191,7 @@ const Layout = (props: Props) => {
         time={time}
         nextBaronTime={gameData?.nextBaronTime}
         nextDragonTime={gameData?.nextDragonTime}
+        nextDragon={gameData?.nextDragon}
         statistics={statistics || undefined}
         observedPlayerLeft={observedPlayerLeft || undefined}
         observedPlayerRight={observedPlayerRight || undefined}

@@ -53,9 +53,11 @@
   .time-text{
     color: #FFF;
     text-align: center;
+    margin-right: 14px;
     max-width: 45px;
     min-width: 45px;
     font-size: 24px;
+    text-align: right;
     margin-top: 10px;
     font-family: GS3 BEATRICE;
   }
@@ -453,7 +455,7 @@
             color: #FFF;
             text-align: center;
             font-family: GS3 BEATRICE;
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 300;
             text-transform: uppercase;
             line-height: normal;
@@ -487,7 +489,7 @@
             .box {
               width: 6px;
               height: 6px;
-              background: rgba(0, 0, 0, 0.50);
+              background: rgb(255, 255, 255);
 
 
               &.win {

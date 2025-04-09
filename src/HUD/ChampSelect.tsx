@@ -254,216 +254,217 @@ const ChampSelect = (props: ChampSelectProps) => {
   const seconds = Math.floor(realTimeLeft % 60);
 
   return (
-    <div className="champ-select">
-      <div className="top-bar">
-        <div
-          className="bar left"
-          style={{ backgroundImage: `url(${TeamBar})` }}
-        >
-          <div className="team-info">
-            <div
-              className="team-logo"
-              style={{
-                backgroundImage: leftTeam?.logo
-                  ? `url(/api/teams/logo/${leftTeam._id})`
-                  : undefined,
-              }}
-            />
-            <div className="team-name">{leftTeam?.name || "Team 1"}</div>
-          </div>
-        </div>
-        <div
-          className="bar right"
-          style={{
-            backgroundImage: `url(${TeamBarAlt})`,
-          }}
-        >
-          <div className="team-info">
-            <div className="team-name">{rightTeam?.name || "Team 2"}</div>
-            <div
-              className="team-logo right"
-              style={{
-                backgroundImage: rightTeam?.logo
-                  ? `url(/api/teams/logo/${rightTeam._id})`
-                  : undefined,
-              }}
-            />
-          </div>
-        </div>
-      </div>
-      {!!picks && picks?.bans.numBans > 0 && (
-        <>
-          <div className="ban-list">
-            {picks?.bans.myTeamBans.map((ban, i) => (
-              <div
-                className="ban"
-                key={i}
-                style={{
-                  backgroundImage: `url(dragontail/newest/img/champion/${dataDragonChampions[ban]?.id}.png)`,
-                }}
-              />
-            ))}
-            {[
-              ...Array(
-                (picks?.bans.numBans || 0) / 2 -
-                  (picks?.bans.myTeamBans.length || 0)
-              ),
-            ].map((_, i) => (
-              <div className={`ban ${i === 0 ? "awaiting" : "empty"}`} key={i}>
-                {i === 0 && <AwaitingDots />}
-              </div>
-            ))}
-          </div>
-          <div className="ban-list right">
-            {picks?.bans.theirTeamBans.map((ban, i) => (
-              <div
-                className="ban"
-                key={i}
-                style={{
-                  backgroundImage: `url(dragontail/newest/img/champion/${dataDragonChampions[ban]?.id}.png)`,
-                }}
-              />
-            ))}
-            {[
-              ...Array(
-                (picks?.bans.numBans || 0) / 2 -
-                  (picks?.bans.theirTeamBans.length || 0)
-              ),
-            ].map((_, i) => (
-              <div className={`ban ${i === 0 ? "awaiting" : "empty"}`} key={i}>
-                {i === 0 && <AwaitingDots />}
-              </div>
-            ))}
-          </div>
-        </>
-      )}
-      <div className="bottom-section">
-        <div className="player-list">
-          <div className="row left">
-            {picks?.myTeam.map((pick, i) => {
-              const lhmPlayer = lhmPlayers.find(
-                (p) => p.steamid === pick.summonerName
-              );
-              const spell1 = dataDragonSummonerSpells[pick.spell1Id];
-              const spell2 = dataDragonSummonerSpells[pick.spell2Id];
-              return (
-                <PlayerBox
-                  key={i}
-                  championImage={dataDragonChampions[pick.championId]?.id}
-                  position={i + 1}
-                  showPosition={showPositions}
-                  picking={
-                    pick.cellId === inProgressAction?.actorCellId &&
-                    inProgressAction?.type === "pick"
-                  }
-                  banning={
-                    pick.cellId === inProgressAction?.actorCellId &&
-                    inProgressAction?.type === "ban"
-                  }
-                  name={lhmPlayer?.username || pick.summonerName}
-                  avatar={lhmPlayer?.avatar}
-                  spellImages={[spell1?.id, spell2?.id]}
-                  teamId={leftTeam?._id}
-                  noAvatar={hidePlayerAvatars}
-                />
-              );
-            })}
-            {[...Array(5 - (picks?.myTeam.length || 0))].map((_, i) => (
-              <PlayerBox key={i + 5} noAvatar={hidePlayerAvatars} />
-            ))}
-          </div>
-          <div className="row right">
-            {picks?.theirTeam.map((pick, i) => {
-              const lhmPlayer = lhmPlayers.find(
-                (p) => p.steamid === pick.summonerName
-              );
-              const spell1 = dataDragonSummonerSpells[pick.spell1Id];
-              const spell2 = dataDragonSummonerSpells[pick.spell2Id];
-              return (
-                <PlayerBox
-                  championImage={dataDragonChampions[pick.championId]?.id}
-                  position={i + 1}
-                  showPosition={showPositions}
-                  picking={
-                    pick.cellId === inProgressAction?.actorCellId &&
-                    inProgressAction?.type === "pick"
-                  }
-                  banning={
-                    pick.cellId === inProgressAction?.actorCellId &&
-                    inProgressAction?.type === "ban"
-                  }
-                  name={lhmPlayer?.username || pick.summonerName}
-                  avatar={lhmPlayer?.avatar}
-                  spellImages={[spell1?.id, spell2?.id]}
-                  teamId={rightTeam?._id}
-                  noAvatar={hidePlayerAvatars}
-                  right
-                />
-              );
-            })}
-            {[...Array(5 - (picks?.theirTeam.length || 0))].map((_, i) => (
-              <PlayerBox right key={i + 5} noAvatar={hidePlayerAvatars} />
-            ))}
-          </div>
-        </div>
-        <div className="tournament-info">
-          <div className="title">{tournamentName}</div>
-          <div className="desc-box">
-            <div className="desc">
-              {match?.matchType ? `Best of ${match.matchType.slice(2)}` : ""}
-            </div>
-            <div className="desc right">{tournamentRightText}</div>
-          </div>
-        </div>
-        <div className="center-bar">
-          <div className="fill" />
-        </div>
-        <div className="center-info">
-          <div className="score-box">
-            <div className="score left">{match?.left?.wins || 0}</div>
-            <div
-              className="tournament-logo"
-              style={{
-                backgroundImage: tournamentImage
-                  ? `url(data:image;base64,${tournamentImage})`
-                  : undefined,
-              }}
-            />
-            <div className="score right">{match?.right?.wins || 0}</div>
-          </div>
-          <div className="timer-box">
-            <div className="left arrow">
-              {inProgressActionSide === "my" && (
-                <SideArrow ban={inProgressAction?.type === "ban"} />
-              )}
-            </div>
-            <div
-              className="phase"
-              style={{ visibility: !!inProgressAction ? "visible" : "hidden" }}
-            >
-              {`${inProgressAction?.type || "Final"} phase`}
-            </div>
-            <div className="timer">
-              {minutes}:{seconds < 10 ? "0" : ""}
-              {seconds}
-            </div>
-            <div className="right arrow">
-              {inProgressActionSide === "their" && (
-                <SideArrow ban={inProgressAction?.type === "ban"} />
-              )}
-            </div>
-          </div>
-        </div>
-        {!!bottomImage && (
-          <div
-            className="bottom-image"
-            style={{
-              backgroundImage: `url(data:image;base64,${bottomImage})`,
-            }}
-          />
-        )}
-      </div>
-    </div>
+    // <div className="champ-select">
+    //   <div className="top-bar">
+    //     <div
+    //       className="bar left"
+    //       style={{ backgroundImage: `url(${TeamBar})` }}
+    //     >
+    //       <div className="team-info">
+    //         <div
+    //           className="team-logo"
+    //           style={{
+    //             backgroundImage: leftTeam?.logo
+    //               ? `url(/api/teams/logo/${leftTeam._id})`
+    //               : undefined,
+    //           }}
+    //         />
+    //         <div className="team-name">{leftTeam?.name || "Team 1"}</div>
+    //       </div>
+    //     </div>
+    //     <div
+    //       className="bar right"
+    //       style={{
+    //         backgroundImage: `url(${TeamBarAlt})`,
+    //       }}
+    //     >
+    //       <div className="team-info">
+    //         <div className="team-name">{rightTeam?.name || "Team 2"}</div>
+    //         <div
+    //           className="team-logo right"
+    //           style={{
+    //             backgroundImage: rightTeam?.logo
+    //               ? `url(/api/teams/logo/${rightTeam._id})`
+    //               : undefined,
+    //           }}
+    //         />
+    //       </div>
+    //     </div>
+    //   </div>
+    //   {!!picks && picks?.bans.numBans > 0 && (
+    //     <>
+    //       <div className="ban-list">
+    //         {picks?.bans.myTeamBans.map((ban, i) => (
+    //           <div
+    //             className="ban"
+    //             key={i}
+    //             style={{
+    //               backgroundImage: `url(dragontail/newest/img/champion/${dataDragonChampions[ban]?.id}.png)`,
+    //             }}
+    //           />
+    //         ))}
+    //         {[
+    //           ...Array(
+    //             (picks?.bans.numBans || 0) / 2 -
+    //               (picks?.bans.myTeamBans.length || 0)
+    //           ),
+    //         ].map((_, i) => (
+    //           <div className={`ban ${i === 0 ? "awaiting" : "empty"}`} key={i}>
+    //             {i === 0 && <AwaitingDots />}
+    //           </div>
+    //         ))}
+    //       </div>
+    //       <div className="ban-list right">
+    //         {picks?.bans.theirTeamBans.map((ban, i) => (
+    //           <div
+    //             className="ban"
+    //             key={i}
+    //             style={{
+    //               backgroundImage: `url(dragontail/newest/img/champion/${dataDragonChampions[ban]?.id}.png)`,
+    //             }}
+    //           />
+    //         ))}
+    //         {[
+    //           ...Array(
+    //             (picks?.bans.numBans || 0) / 2 -
+    //               (picks?.bans.theirTeamBans.length || 0)
+    //           ),
+    //         ].map((_, i) => (
+    //           <div className={`ban ${i === 0 ? "awaiting" : "empty"}`} key={i}>
+    //             {i === 0 && <AwaitingDots />}
+    //           </div>
+    //         ))}
+    //       </div>
+    //     </>
+    //   )}
+    //   <div className="bottom-section">
+    //     <div className="player-list">
+    //       <div className="row left">
+    //         {picks?.myTeam.map((pick, i) => {
+    //           const lhmPlayer = lhmPlayers.find(
+    //             (p) => p.steamid === pick.summonerName
+    //           );
+    //           const spell1 = dataDragonSummonerSpells[pick.spell1Id];
+    //           const spell2 = dataDragonSummonerSpells[pick.spell2Id];
+    //           return (
+    //             <PlayerBox
+    //               key={i}
+    //               championImage={dataDragonChampions[pick.championId]?.id}
+    //               position={i + 1}
+    //               showPosition={showPositions}
+    //               picking={
+    //                 pick.cellId === inProgressAction?.actorCellId &&
+    //                 inProgressAction?.type === "pick"
+    //               }
+    //               banning={
+    //                 pick.cellId === inProgressAction?.actorCellId &&
+    //                 inProgressAction?.type === "ban"
+    //               }
+    //               name={lhmPlayer?.username || pick.summonerName}
+    //               avatar={lhmPlayer?.avatar}
+    //               spellImages={[spell1?.id, spell2?.id]}
+    //               teamId={leftTeam?._id}
+    //               noAvatar={hidePlayerAvatars}
+    //             />
+    //           );
+    //         })}
+    //         {[...Array(5 - (picks?.myTeam.length || 0))].map((_, i) => (
+    //           <PlayerBox key={i + 5} noAvatar={hidePlayerAvatars} />
+    //         ))}
+    //       </div>
+    //       <div className="row right">
+    //         {picks?.theirTeam.map((pick, i) => {
+    //           const lhmPlayer = lhmPlayers.find(
+    //             (p) => p.steamid === pick.summonerName
+    //           );
+    //           const spell1 = dataDragonSummonerSpells[pick.spell1Id];
+    //           const spell2 = dataDragonSummonerSpells[pick.spell2Id];
+    //           return (
+    //             <PlayerBox
+    //               championImage={dataDragonChampions[pick.championId]?.id}
+    //               position={i + 1}
+    //               showPosition={showPositions}
+    //               picking={
+    //                 pick.cellId === inProgressAction?.actorCellId &&
+    //                 inProgressAction?.type === "pick"
+    //               }
+    //               banning={
+    //                 pick.cellId === inProgressAction?.actorCellId &&
+    //                 inProgressAction?.type === "ban"
+    //               }
+    //               name={lhmPlayer?.username || pick.summonerName}
+    //               avatar={lhmPlayer?.avatar}
+    //               spellImages={[spell1?.id, spell2?.id]}
+    //               teamId={rightTeam?._id}
+    //               noAvatar={hidePlayerAvatars}
+    //               right
+    //             />
+    //           );
+    //         })}
+    //         {[...Array(5 - (picks?.theirTeam.length || 0))].map((_, i) => (
+    //           <PlayerBox right key={i + 5} noAvatar={hidePlayerAvatars} />
+    //         ))}
+    //       </div>
+    //     </div>
+    //     <div className="tournament-info">
+    //       <div className="title">{tournamentName}</div>
+    //       <div className="desc-box">
+    //         <div className="desc">
+    //           {match?.matchType ? `Best of ${match.matchType.slice(2)}` : ""}
+    //         </div>
+    //         <div className="desc right">{tournamentRightText}</div>
+    //       </div>
+    //     </div>
+    //     <div className="center-bar">
+    //       <div className="fill" />
+    //     </div>
+    //     <div className="center-info">
+    //       <div className="score-box">
+    //         <div className="score left">{match?.left?.wins || 0}</div>
+    //         <div
+    //           className="tournament-logo"
+    //           style={{
+    //             backgroundImage: tournamentImage
+    //               ? `url(data:image;base64,${tournamentImage})`
+    //               : undefined,
+    //           }}
+    //         />
+    //         <div className="score right">{match?.right?.wins || 0}</div>
+    //       </div>
+    //       <div className="timer-box">
+    //         <div className="left arrow">
+    //           {inProgressActionSide === "my" && (
+    //             <SideArrow ban={inProgressAction?.type === "ban"} />
+    //           )}
+    //         </div>
+    //         <div
+    //           className="phase"
+    //           style={{ visibility: !!inProgressAction ? "visible" : "hidden" }}
+    //         >
+    //           {`${inProgressAction?.type || "Final"} phase`}
+    //         </div>
+    //         <div className="timer">
+    //           {minutes}:{seconds < 10 ? "0" : ""}
+    //           {seconds}
+    //         </div>
+    //         <div className="right arrow">
+    //           {inProgressActionSide === "their" && (
+    //             <SideArrow ban={inProgressAction?.type === "ban"} />
+    //           )}
+    //         </div>
+    //       </div>
+    //     </div>
+    //     {!!bottomImage && (
+    //       <div
+    //         className="bottom-image"
+    //         style={{
+    //           backgroundImage: `url(data:image;base64,${bottomImage})`,
+    //         }}
+    //       />
+    //     )}
+    //   </div>
+    // </div>
+    <></>
   );
 };
 
